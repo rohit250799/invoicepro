@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #installed apps
     'rest_framework',
     'rest_framework_simplejwt',
+    'gst_field',
     #created apps
     'customers',
 ]
