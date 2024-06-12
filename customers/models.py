@@ -27,15 +27,16 @@ class Customer(models.Model):
     full_name = models.CharField(max_length=60)
     organization_name = models.CharField(max_length=100, unique=True)
     mobile_number = PhoneField(unique=True, help_text='Contact phone number')
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
     address = models.TextField(blank=True)
     status = models.CharField(choices=CustomerStatus, default=CustomerStatus.ACTIVE)
     receivables = models.IntegerField(default=0, blank=True)
     gst_treatment = models.CharField(choices=GstTreatment, default=GstTreatment.UNREGISTERED)
-    GSTIN = GSTField()
+    gstin = GSTField()
     _aadhar_number = models.CharField(max_length=255, db_column='aadhar_number', unique=True)
     payment_terms = models.CharField(choices=PaymentTermsChoices, default=PaymentTermsChoices.DUE_ON_RECEIPT)
     upi_number = models.CharField(unique=True, blank=True, max_length=50, validators=[MinLengthValidator(3)])
 
-
+    def __str__(self):
+        return self.display_name
 
