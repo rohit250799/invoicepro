@@ -121,6 +121,72 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Creating the Log Directory
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+
+#for creating logs 
+LOGGING = {
+    'version': 1,
+    # The version number of our log
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s - %(levelname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s\n%(exc_info)s',
+            #'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            #'filename': BASE_DIR / 'warning.log',
+            'filename': os.path.join(LOG_DIR, 'warning.log'),
+            'formatter': 'verbose',
+        },
+        'file1': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            #'filename': BASE_DIR / 'django_messages.log',
+            'filename': os.path.join(LOG_DIR, 'django_messages.log'),
+            'when': 'midnight',  # Rotate logs at midnight
+            'interval': 1,       # for 1 day
+            'backupCount': 2,    # Keeps logs for the last 2 days
+            'formatter': 'verbose',
+        },
+
+        'console':{
+            'level':'DEBUG',
+            'filters': ['require_debug_true'],
+            'class':'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file1'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers':['file'],
+            'level':'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -137,7 +203,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static/static_files",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
