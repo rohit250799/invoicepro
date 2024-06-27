@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'gst_field',
     #created apps
     'customers',
+    'estimates',
 ]
 
 MIDDLEWARE = [
