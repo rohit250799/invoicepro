@@ -3,6 +3,7 @@ from django.db import models, transaction
 from django.db.models import Max
 from customers.models import Customer
 from django.utils.translation import gettext_lazy as _
+from items.models import Item
 
 # Create your models here.
 
@@ -16,11 +17,11 @@ class Estimates(models.Model):
 
     class TaxTypeAsTdsOrTcs(models.TextChoices):
         TDS = "TDS", _("Tds")
-        TCS = "Tcs", _("Tcs")
+        TCS = "TCS", _("Tcs")
 
     estimate_number = models.CharField(max_length=30, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    offer_date = models.DateField(default=datetime.date.today())
+    estimate_date = models.DateField(default=datetime.date.today())
     offer_expiry_date = models.DateField()
     subject = models.TextField()
     status = models.CharField(choices=StatusType, default=StatusType.DRAFT)
@@ -69,4 +70,4 @@ class EstimateItems(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f'{self.estimate.estimate_number} - {self.product.name}'
+        return f'{self.estimate.estimate_number} - {self.item.name}'
