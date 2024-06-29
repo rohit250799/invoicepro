@@ -164,3 +164,6 @@ cython_debug/
 
 #git clones unwanted
 .git
+
+#for the log files directory
+logs
