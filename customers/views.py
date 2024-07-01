@@ -9,7 +9,7 @@ class CustomerListCreateView(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-class CustomerRetrieveUpdateView(generics.RetrieveUpdateDestroyAPIView):
+class CustomerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 

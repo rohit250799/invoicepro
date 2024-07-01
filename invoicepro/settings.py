@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     #created apps
     'customers',
     'estimates',
+    'items',
 ]
 
 MIDDLEWARE = [
