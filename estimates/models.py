@@ -33,7 +33,7 @@ class Estimates(models.Model):
     discount_applicable = models.BooleanField(default=False)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=None, null=True, blank=True)
     terms_and_conditions = models.CharField()
-    upload_additional_files = models.FileField()
+    upload_additional_files = models.FileField(blank=True, null=True)
     
 
 
