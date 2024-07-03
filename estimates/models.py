@@ -65,7 +65,7 @@ class Estimates(models.Model):
 
 class EstimateItems(models.Model):
     estimate = models.ForeignKey(Estimates, related_name='items', on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    product = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
