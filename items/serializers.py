@@ -5,6 +5,6 @@ from rest_framework.validators import UniqueValidator
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['id', 'name', 'quantity', 'selling_rate']
+        fields = ['name', 'quantity', 'selling_rate']
 
     
