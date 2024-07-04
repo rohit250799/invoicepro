@@ -23,12 +23,11 @@ class Item(models.Model):
     status = models.CharField(choices=ItemStatus, default=ItemStatus.ACTIVE)
     item_type = models.CharField(choices=ItemType)
     description = models.TextField(blank=True)
-    selling_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    marked_price_by_user_for_sale = models.DecimalField(max_digits=10, decimal_places=2)
     unit = models.CharField(choices=AvailableUnits, default=AvailableUnits.PCS)
     taxes_applicable = models.BooleanField(default=False)
     tax_percentage_on_item = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    available_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    available_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
 
     def __str__(self):
         return self.name
