@@ -10,7 +10,8 @@ class EstimateItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EstimateItems
-        fields = ['product', 'quantity', 'price']
+        #fields = ['product', 'offered_quantity_to_customer', 'selling_price_proposed_to_customer']
+        fields = ['product', 'offered_quantity_to_customer']
 
 class EstimateSerializer(serializers.ModelSerializer):
     items = EstimateItemSerializer(many=True)
