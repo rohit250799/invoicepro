@@ -47,3 +47,8 @@ class EstimateSerializer(serializers.ModelSerializer):
             EstimateItems.objects.create(estimate=instance, item=item, **item_data)
 
         return instance
+    
+    def validate(self, data):
+        if data['estimate_date'] > data['offer_expiry_date']:
+            raise serializers.ValidationError({'offer_expiry_date': 'the expiry date cannot be earlier than estimate date'})
+        return data
