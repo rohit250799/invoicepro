@@ -27,7 +27,7 @@ class Item(models.Model):
     unit = models.CharField(choices=AvailableUnits, default=AvailableUnits.PCS)
     taxes_applicable = models.BooleanField(default=False)
     tax_percentage_on_item = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    available_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    available_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
     inventory_threshold_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1.00)
 
     def __str__(self):
