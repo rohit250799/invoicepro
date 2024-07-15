@@ -1,6 +1,8 @@
 from django.urls import path
-from dashboard.views import dashboardIndex
+from django.conf import settings
+from django.conf.urls.static import static
+from dashboard.views import siteIndex
 
 urlpatterns = [
-    path('', dashboardIndex, name='dashboard index'),
-]
+    path('', siteIndex, name='invoicepro index'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
