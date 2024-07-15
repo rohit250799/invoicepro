@@ -1,0 +1,68 @@
+{% load static %}
+<html lang = "en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Invoicepro {% block title %} {% endblock %} </title>
+        <style>
+          .bg_image {
+            background-image: url("{% static 'images/invoicepro_bg_image.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 60%;
+            padding          
+          }
+        </style>
+    </head>
+    <body>
+   
+        <header class="shadow flex justify-around p-4 mt-4 mx-4">
+          <div class="px-4">
+            <a class="" href="#">Invoicepro</a>
+          </div>
+          <div class="px-4 mx-4 flex justify-around">
+            <div class="p-2">
+              <a class="" href="#">Features</a>
+            </div>
+            <div class="p-2">
+              <a class="" href="#">Docs</a>
+            </div>
+            <div class="p-2">
+              <a class="" href="#">Quickstart</a>
+            </div>
+            <div class="p-2">
+              <a class="" href="#">About Us</a>
+            </div>
+            {% comment %} <div class="p-2">
+              {% if request.user.is_authenticated %}
+                <a class="" href="{% url "logout" %}">Log Out</a>
+              {% else %}
+                <a class="" href="{% url "signup" %}">Sign Up</a>
+                <a class="" href="{% url "login_test" %}">Login</a>
+              {% endif %} {% endcomment %}
+            </div>
+      
+            
+          </div>
+        </header>
+
+        <div class="p-4">
+          <div class="bg_image">
+            <p>Invoice Management Sytem</p>
+          </div>
+        </div>
+
+
+      
+          {% comment %} {% include 'partials/sidebar.html' %}
+            <main class="p-4 m-4">
+            
+              {% block content %}
+              {% endblock %}
+              
+          </main> {% endcomment %}
+      
+          <script src="{% static 'js/main.js' %}"></script></body>
+</html>
