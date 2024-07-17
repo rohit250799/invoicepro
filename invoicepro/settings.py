@@ -126,6 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 10}
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -134,6 +135,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+#Auth user model
+AUTH_USER_MODEL = 'users.UserProfileInfo'
 
 #Creating the Log Directory
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
