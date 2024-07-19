@@ -15,12 +15,11 @@ class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-# class UserCreateView(generics.ListCreateAPIView):
-#      model = 
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-
-class UserUpdateView(generics.UpdateAPIView):
+class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    model = get_user_model()
+    permission_classes = [
+        permissions.AllowAny
+    ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
