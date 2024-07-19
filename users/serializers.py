@@ -1,16 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
-User = get_user_model
+from users.models import UserProfileInfo
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserProfileInfo
         fields = ('id', 'username', 'email', 'password', 'plan_type', 'user_country', 'user_currency')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_date):
-        user = User(
+        user = UserProfileInfo(
             email = validated_date['email'],
             username = validated_date['username'],
             plan_type = validated_date['plan_type'],
