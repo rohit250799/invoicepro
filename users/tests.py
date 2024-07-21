@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
+from django.http import HttpResponse
 
 User = get_user_model()
 
