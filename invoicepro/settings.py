@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #installed apps
+    #3rd party packages
     'rest_framework',
     'rest_framework_simplejwt',
     'gst_field',
-    #created apps
+    #local apps
     'dashboard',
     'customers',
     'estimates',
@@ -103,7 +103,8 @@ DATABASES = {
 #Rest framework:
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -116,6 +117,12 @@ PASSWORD_HASHERS = {
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 }
+
+#for authentication backends:
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'users.auth_backend.MyBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -137,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 #Auth user model
-AUTH_USER_MODEL = 'users.UserProfileInfo'
+AUTH_USER_MODEL = "users.UserProfileInfo"
 
 #Creating the Log Directory
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
