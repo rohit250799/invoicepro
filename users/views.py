@@ -4,12 +4,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from users.serializers import UserSerializer
 from users.models import UserProfileInfo
 
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse, response
+#from django.http import HttpResponse, response
 from django.core.exceptions import ObjectDoesNotExist
 
 User = get_user_model()
@@ -20,6 +21,8 @@ def register_user(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            #request.status_code = 201
+            messages.success(request, 'User created succesfully!')
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
