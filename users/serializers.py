@@ -1,5 +1,6 @@
-from django.contrib.auth import get_user_model
+#from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.contrib import messages
 from users.models import UserProfileInfo
 
 class UserSerializer(serializers.ModelSerializer):
@@ -7,17 +8,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserProfileInfo
         fields = ('id', 'username', 'email', 'password', 'plan_type', 'user_country', 'user_currency')
         extra_kwargs = {'password': {'write_only': True}}
+        
 
-    def create(self, validated_date):
+    def create(self, validated_data):
         user = UserProfileInfo(
-            email = validated_date['email'],
-            username = validated_date['username'],
-            plan_type = validated_date['plan_type'],
-            user_country = validated_date['user_country'],
-            user_currency = validated_date['user_currency']
+            email = validated_data['email'],
+            username = validated_data['username'],
+            plan_type = validated_data['plan_type'],
+            user_country = validated_data['user_country'],
+            user_currency = validated_data['user_currency']
         )
-        user.set_password(validated_date['password']) #for hashing password
+        user.set_password(validated_data['password']) #for hashing password
         user.save()
+        #messages.success(validated_data, 'User created succesfully!')
         return user
     
     def update(self, instance, validated_data):
