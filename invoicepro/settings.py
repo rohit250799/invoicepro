@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #3rd party packages
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'gst_field',
     #local apps
@@ -102,11 +103,14 @@ DATABASES = {
 
 #Rest framework:
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    # 'DEFAULT_FILTER_BACKENDS': [
+    #     'django_filters.rest_framework.DjangoFilterBackend'
+    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 #for Password Hashing:
@@ -121,7 +125,7 @@ PASSWORD_HASHERS = {
 #for authentication backends:
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'users.auth_backend.MyBackend',
+    #'users.auth_backend.MyBackend',
 ]
 
 # Password validation
@@ -244,3 +248,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+#"token": "49c8a9b4bd01c0ef7bca2aeb95ff301140a3e0bc"
