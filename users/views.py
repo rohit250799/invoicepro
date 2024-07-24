@@ -5,15 +5,18 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from users.serializers import UserSerializer
 from users.models import UserProfileInfo
 
-from django.contrib.auth import authenticate, login
+#from django.contrib.auth import authenticate, login
 #from django.http import HttpResponse, response
 from django.core.exceptions import ObjectDoesNotExist
 
 User = get_user_model()
+
+def siteIndex(request):
+    return render(request, 'dashboard/index.html')
 
 @api_view(['POST'])
 def register_user(request):
@@ -29,7 +32,7 @@ def register_user(request):
 @api_view(['POST'])
 def user_login(request):
     if request.method == 'POST':
-        username = request.user.get('username')
+        username = request.data.get('username')
         password = request.data.get('password')
 
         user = None
@@ -42,6 +45,7 @@ def user_login(request):
         
         if user:
             token, _ = Token.objects.get_or_create(user=user)
+            messages.success(request, 'User logged in')
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
