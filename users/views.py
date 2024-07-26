@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions, status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.authtoken.models import Token
+from rest_framework import status
+#from rest_framework.decorators import api_view, permission_classes
+#from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
@@ -15,52 +15,63 @@ from users.models import UserProfileInfo
 #from django.http import HttpResponse, response
 from django.core.exceptions import ObjectDoesNotExist
 
+import datetime, pytz, os, jwt
+
 User = get_user_model()
+secret_key = os.getenv('SECRET_KEY')
 
-def siteIndex(request):
-    return render(request, 'dashboard/index.html')
+# def siteIndex(request):
+#     return render(request, 'dashboard/index.html')
 
-@api_view(['POST'])
-def register_user(request):
-    if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            #request.status_code = 201
-            messages.success(request, 'User created succesfully!')
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# def register_user(request):
+#     if request.method == 'POST':
+#         serializer = UserSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             #request.status_code = 201
+#             messages.success(request, 'User created succesfully!')
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def user_login(request):
-    if request.method == 'POST':
-        username = request.data.get('username')
-        password = request.data.get('password')
+# @api_view(['POST'])
+# def user_login(request):
+#     if request.method == 'POST':
+#         username = request.data.get('username')
+#         password = request.data.get('password')
 
-        user = None
-        if '@' in username:
-            try: 
-                user = UserProfileInfo.objects.get(email=username)
-            except ObjectDoesNotExist: pass
+#         user = None
+#         if '@' in username:
+#             try: 
+#                 user = UserProfileInfo.objects.get(email=username)
+#             except ObjectDoesNotExist: pass
         
-        if not user: user = authenticate(username=username, password=password)
+#         if not user: user = authenticate(username=username, password=password)
         
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            messages.success(request, 'User logged in')
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+#         if user:
+#             token, _ = Token.objects.get_or_create(user=user)
+#             messages.success(request, 'User logged in')
+#             return Response({'token': token.key}, status=status.HTTP_200_OK)
         
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+#         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])    
-def user_logout(request):
-    if request.method == 'POST':
-        try: 
-            request.user.auth_token.delete()
-            return Response({'message': 'Succesfully logged out'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# {
+#   "jwt": {
+#     "id": 26,
+#     "exp": 1721993160,
+#     "iat": 1721989560
+#   }
+# }
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])    
+# def user_logout(request):
+#     if request.method == 'POST':
+#         try: 
+#             request.user.auth_token.delete()
+#             return Response({'message': 'Succesfully logged out'}, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # class UserCreateView(generics.CreateAPIView):
 #     model = get_user_model()
@@ -97,7 +108,50 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password')
+        
+        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        kolkata_timezone = pytz.timezone('Asia/Kolkata')
+        kolkata_current_timezone = utc_now.astimezone(kolkata_timezone)
+        
+        payload = {
+            'id': user.id,
+            'exp': kolkata_current_timezone + datetime.timedelta(minutes=60),
+            'iat': kolkata_current_timezone   #token creation date
+        }
 
-        return Response({
-            'message': 'success'
-        })    
+        encoded_token = jwt.encode(payload, key=secret_key, algorithm="HS256")
+        decoded_token = jwt.decode(encoded_token, key=secret_key, algorithms="HS256")
+
+        response = Response()
+
+        response.set_cookie(key='jwt', value=decoded_token, httponly=True)
+        response.data = {
+            'jwt': decoded_token
+        }
+
+        return response
+    
+class UserView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')  
+        
+        try:
+            payload = jwt.decode(token, key=secret_key, algorithms="HS256")
+        except jwt.ExpiredSignatureError: raise AuthenticationFailed('Unauthenticated!')
+
+        user = UserProfileInfo.objects.filter(id=payload['id']).first()
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data)
+    
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'successfully logged out'
+        }
+        return response
