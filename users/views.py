@@ -111,7 +111,10 @@ class LoginView(APIView):
         
         utc_now = datetime.datetime.now(datetime.timezone.utc)
         kolkata_timezone = pytz.timezone('Asia/Kolkata')
+        fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+        # localized_dt = kolkata_timezone.localize(datetime())
         kolkata_current_timezone = utc_now.astimezone(kolkata_timezone)
+
         
         payload = {
             'id': user.id,
@@ -124,9 +127,14 @@ class LoginView(APIView):
 
         response = Response()
 
-        response.set_cookie(key='jwt', value=decoded_token, httponly=True)
+        # response.set_cookie(key='jwt', value=decoded_token, httponly=True)
+        # response.data = {
+        #     'jwt': decoded_token
+        # }
+
+        response.set_cookie(key='jwt', value=encoded_token, httponly=True)
         response.data = {
-            'jwt': decoded_token
+            'jwt': encoded_token
         }
 
         return response
