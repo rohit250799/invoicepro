@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
 #from rest_framework.decorators import api_view, permission_classes
 #from rest_framework.authtoken.models import Token
@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate
 from users.serializers import UserSerializer
 from users.models import UserProfileInfo
+from dashboard.urls import login_redirection
 
 #from django.contrib.auth import authenticate, login
 #from django.http import HttpResponse, response
@@ -19,9 +20,6 @@ import datetime, pytz, os, jwt
 
 User = get_user_model()
 secret_key = os.getenv('SECRET_KEY')
-
-# def siteIndex(request):
-#     return render(request, 'dashboard/index.html')
 
 # @api_view(['POST'])
 # def register_user(request):
@@ -55,14 +53,6 @@ secret_key = os.getenv('SECRET_KEY')
         
 #         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-# {
-#   "jwt": {
-#     "id": 26,
-#     "exp": 1721993160,
-#     "iat": 1721989560
-#   }
-# }
-
 # @api_view(['POST'])
 # @permission_classes([IsAuthenticated])    
 # def user_logout(request):
@@ -94,6 +84,7 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        messages.success(request, 'Registration succesful')
         return Response(serializer.data)
 
 class LoginView(APIView):
@@ -134,8 +125,10 @@ class LoginView(APIView):
         response.data = {
             'jwt': encoded_token
         }
+        messages.success(request, 'Login succesful')
+        #return response
+        return redirect("/user_dashboard/", response)
 
-        return response
     
 class UserView(APIView):
     def get(self, request):
@@ -160,4 +153,5 @@ class LogoutView(APIView):
         response.data = {
             'message': 'successfully logged out'
         }
+        #return redirect("https://0.0.0.0/", response)
         return response
