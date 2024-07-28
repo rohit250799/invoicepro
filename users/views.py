@@ -111,8 +111,6 @@ class LoginView(APIView):
         
         utc_now = datetime.datetime.now(datetime.timezone.utc)
         kolkata_timezone = pytz.timezone('Asia/Kolkata')
-        fmt = '%Y-%m-%d %H:%M:%S %Z%z'
-        # localized_dt = kolkata_timezone.localize(datetime())
         kolkata_current_timezone = utc_now.astimezone(kolkata_timezone)
 
         
