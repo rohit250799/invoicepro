@@ -8,7 +8,6 @@ from argon2 import PasswordHasher
 ph = PasswordHasher()
 class UserProfileInfo(AbstractUser):
 
-    #user = models.OneToOneField(AbstractUser)
     class Plan_options(models.TextChoices):
         FREE = "FREE", _('Free')
         SILVER = "SILVER", _("Silver")
@@ -26,10 +25,7 @@ class UserProfileInfo(AbstractUser):
     
     mobile = models.CharField(max_length=15)
     plan_type = models.CharField(max_length=30, choices=Plan_options, default=Plan_options.FREE)
-    #hashed_password = ph.hash()
     user_country = models.CharField(max_length=30, choices=Country_options, default=Country_options.INDIA)
     user_currency = models.CharField(max_length=25, choices=Currency_options, default=Currency_options.INR)
     state = models.CharField(max_length=30)
     city = models.CharField(max_length=35)
-    
-

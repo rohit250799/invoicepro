@@ -4,3 +4,6 @@ from django.shortcuts import render
 
 def siteIndex(request):
     return render(request, 'dashboard/index.html')
+
+def login_redirection(request):
+    return render(request, 'dashboard/dashboard.html')
