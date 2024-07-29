@@ -154,4 +154,5 @@ class LogoutView(APIView):
             'message': 'successfully logged out'
         }
         #return redirect("https://0.0.0.0/", response)
+        response.status_code = status.HTTP_200_OK
         return response
