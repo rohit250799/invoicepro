@@ -153,6 +153,11 @@ AUTH_PASSWORD_VALIDATORS = [
 #Auth user model
 AUTH_USER_MODEL = "users.UserProfileInfo"
 
+#Authentication URLs
+LOGIN_URL = '/users/login_user/'
+
+LOGIN_REDIRECT_URL = '/dashboard/user_dashboard/'
+
 #Creating the Log Directory
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOG_DIR):
