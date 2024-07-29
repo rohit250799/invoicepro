@@ -7,7 +7,7 @@
     <header class="shadow flex justify-around p-4 mt-4 mx-4">
         <div class="px-4 mx-4 flex justify-around">
             <div class="p-2">
-                <a class="text-blue-500" href="http://0.0.0.0:8000/users/logout_user/">Logout</a>
+                <button class="text-blue-500" id="logout-button-test">Logout</button>
                 {% if messages %}
                 <ul class="messages text-red-700">
                     {% for message in messages %}
@@ -28,4 +28,47 @@
     {% endif %}
     <p>This is the redirected login dashboard</p>
 
+    <script>
+        document.getElementById('logout-button-test').addEventListener('click', function() {
+            fetch('/users/logout_user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')  // Ensure you include the CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'successfully logged out') {
+                    alert(data.message);  // Show success message
+                    window.location.replace("http://0.0.0.0:8000/")  // Redirect to the index page
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function getCookies(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+
 {% endblock %}
+{% comment %} 
+<script>
+
+    function getCookiesTest{
+        alert("Hello World")
+    }
+</script> {% endcomment %}
