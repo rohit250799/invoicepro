@@ -1,0 +1,23 @@
+<!-- templates/user_form.html -->
+
+{% load rest_framework %}
+
+<html>
+<head>
+    <title>Estimate Form</title>
+</head>
+<body>
+    <h1>Estimate Form</h1>
+    {% comment %} <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form> {% endcomment %}
+
+    <form action="{% url 'create-estimate' id=estimate.id %}" method="POST">
+        {% csrf_token %}
+        {% render_form serializer %}
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
