@@ -7,6 +7,16 @@
     <header class="shadow flex justify-around p-4 mt-4 mx-4">
         <div class="px-4 mx-4 flex justify-around">
             <div class="p-2">
+                <a class="text-blue-500" href="http://0.0.0.0:8000/estimates/">Create estimate</a>
+                {% if messages %}
+                <ul class="messages text-red-700">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %} 
+            </div>
+            <div class="p-2">
                 <button class="text-blue-500" id="logout-button-test">Logout</button>
                 {% if messages %}
                 <ul class="messages text-red-700">
