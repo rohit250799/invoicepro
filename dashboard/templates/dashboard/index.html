@@ -1,50 +1,49 @@
 {% load static %}
 <html lang = "en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <title>Invoicepro {% block title %} {% endblock %} </title>
-        <style>
-          .bg_image {
-            background-image: url("{% static 'images/invoicepro_bg_image.jpg' %}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 60%;
-            padding          
-          }
-        </style>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <title>Invoicepro {% block title %} {% endblock %} </title>
+      <style>
+        .bg_image {
+          background-image: url("{% static 'images/invoicepro_bg_image.jpg' %}");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          height: 60%;
+          padding          
+        }
+      </style>
     </head>
     <body>
    
-        <header class="shadow flex justify-around p-4 mt-4 mx-4">
-          <div class="px-4">
-            <a class="" href="#">Invoicepro</a>
+      <header class="shadow flex justify-around p-4 mt-4 mx-4">
+        <div class="px-4">
+          <a class="" href="#">Invoicepro</a>
+        </div>
+        <div class="px-4 mx-4 flex justify-around">
+          <div class="p-2">
+            <a class="" href="#">Features</a>
           </div>
-          <div class="px-4 mx-4 flex justify-around">
-            <div class="p-2">
-              <a class="" href="#">Features</a>
-            </div>
-            <div class="p-2">
-              <a class="" href="#">Docs</a>
-            </div>
-            <div class="p-2">
-              <a class="" href="#">Quickstart</a>
-            </div>
-            <div class="p-2">
-              <a class="" href="#">About Us</a>
-            </div>
-            <div class="p-2">
-              {% comment %} <a class="" href="http://0.0.0.0:8000/users/create_user/">Register</a> {% endcomment %}
-              <a class="" href="http://0.0.0.0:8000/users/register_user/">Register</a>
-              {% if messages %}
-                <ul class="messages text-red-700">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-              {% endif %}
+          <div class="p-2">
+            <a class="" href="#">Docs</a>
+          </div>
+          <div class="p-2">
+            <a class="" href="#">Quickstart</a>
+          </div>
+          <div class="p-2">
+            <a class="" href="#">About Us</a>
+          </div>
+          <div class="p-2">
+            <a class="" href="http://0.0.0.0:8000/users/register_user/">Register</a>
+            {% if messages %}
+              <ul class="messages text-red-700">
+                {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
             </div>
             <div class="p-2">
               <a class="" href="http://0.0.0.0:8000/users/login_user/">Login</a>
@@ -56,13 +55,6 @@
                 </ul>
               {% endif %}
             </div>
-            {% comment %} <div class="p-2">
-              {% if request.user.is_authenticated %}
-                <a class="" href="{% url "logout" %}">Log Out</a>
-              {% else %}
-                <a class="" href="{% url "signup" %}">Sign Up</a>
-                <a class="" href="{% url "login_test" %}">Login</a>
-              {% endif %} {% endcomment %}
             </div>
       
             
@@ -85,5 +77,16 @@
               
           </main> {% endcomment %}
       
-          <script src="{% static 'js/main.js' %}"></script></body>
+        <script src="{% static 'js/main.js' %}"></script>
+    </body>
 </html>
+
+
+
+
+<!--
+{
+  "email": "rohit@gmail.com",
+  "password": "test@123"
+}
+-->
