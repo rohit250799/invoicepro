@@ -18,7 +18,8 @@ class Estimates(models.Model):
     class TaxTypeAsTdsOrTcs(models.TextChoices):
         TDS = "TDS", _("Tds")
         TCS = "TCS", _("Tcs")
-
+    
+    estimate_id = models.AutoField(primary_key=True)
     estimate_number = models.CharField(max_length=30, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     estimate_date = models.DateField(default=datetime.date.today())
