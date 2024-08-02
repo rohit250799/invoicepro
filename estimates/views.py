@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -21,16 +21,8 @@ class EstimateListCreateView(generics.ListCreateAPIView):
 class EstimateCreationView(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'estimates/estimate_form.html'
-
-    def get(self, request, id):
-        # form = EstimateForm()
-        # return render(request, 'estimates/estimate_form.html', {'form': form})
-        estimate = get_object_or_404(Estimates, id=id)
-        serializer = EstimateSerializer(estimate)
-        return Response({'serializer': serializer, 'estimate': estimate})
-        
     
-    def post(self, request, id):
+    def post(self, request, *args, **kwargs):
         # form = EstimateForm(request.POST)
         # if form.is_valid():
         #     estimate = form.save()
@@ -38,12 +30,21 @@ class EstimateCreationView(APIView):
         #     return redirect('estimate-pdf-creation')
         # return render(request, 'estimate_form.html', {'form': form})
 
-        estimate = get_object_or_404(Estimates, pk=id)
-        serializer = EstimateSerializer(estimate, data=request.data)
+        #estimate = get_object_or_404(Estimates, pk=id)
+        serializer = EstimateSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response({'serializer': serializer, 'estimate': estimate})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return redirect('estimate-list-create')
+    
+class EstimateDetailView(APIView):
+    def get(self, request, estimate_id, *args, **kwargs):
+        try:
+            estimate = Estimates.objects.get(pk=estimate_id)
+        except Estimates.DoesNotExist:
+            return Response({"error": "Estimate not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = EstimateSerializer(estimate)
+        return Response(serializer.data)
 
 class EstimateRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Estimates.objects.all()
