@@ -72,4 +72,4 @@ class EstimateItems(models.Model):
     selling_price_proposed_to_customer = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.estimate.estimate_number} - {self.item.name}'
+        return f'{self.estimate.estimate_number} - {self.product}'
