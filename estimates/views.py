@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework import generics, viewsets, status
+from rest_framework import generics, viewsets, status, serializers
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response 
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer
 from estimates.models import Estimates, EstimateItems
 from estimates.serializers import EstimateSerializer
 from estimates.forms import EstimateForm
 
-from django.template.response import SimpleTemplateResponse
+#from django.template.response import SimpleTemplateResponse
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
@@ -19,23 +19,20 @@ class EstimateListCreateView(generics.ListCreateAPIView):
     serializer_class = EstimateSerializer
 
 class EstimateCreationView(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
+    renderer_classes = [TemplateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer]
     template_name = 'estimates/estimate_form.html'
     
-    def post(self, request, *args, **kwargs):
-        # form = EstimateForm(request.POST)
-        # if form.is_valid():
-        #     estimate = form.save()
-        #     serializer = EstimateSerializer(estimate)
-        #     return redirect('estimate-pdf-creation')
-        # return render(request, 'estimate_form.html', {'form': form})
+    def post(self, request):
+        data = request.data
+        serializer = EstimateSerializer(data=data)
+        #print(serializer.data)
+        if serializer.is_valid():
+            #input_data = serializer.validated_data
+            serializer.save()
+            return Response({'serializer': serializer})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        #estimate = get_object_or_404(Estimates, pk=id)
-        serializer = EstimateSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
-        return redirect('estimate-list-create')
+    
     
 class EstimateDetailView(APIView):
     def get(self, request, estimate_id, *args, **kwargs):
@@ -62,3 +59,12 @@ def estimate_pdf_creation_view(request):
     p.save()
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='estimate.pdf')
+
+
+
+
+
+
+
+
+
