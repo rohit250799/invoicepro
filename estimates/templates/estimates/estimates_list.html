@@ -1,0 +1,26 @@
+{% load rest_framework %}
+
+html>
+<head>
+    <title>Estimate Form</title>
+</head>
+<body>
+    <h1>Estimate List</h1>
+    <ul>
+        {% for estimate in estimates %}
+            <li>
+                <strong>estimate number:</strong> {{ estimate.estimate_number }}<br>
+                <strong>customer:</strong> {{ estimate.customer }}<br>
+                <strong>estimate_date:</strong> {{ estimate.estimate_date }}<br>
+                <strong>offer expiry date:</strong> {{ estimate.offer_expiry_date }}<br>
+                <strong>items:</strong>
+                <ul>
+                    {% for item in estimates.items.all %}
+                        <li>{{ car }}</li> <!-- Adjust according to your Car model fields -->
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
