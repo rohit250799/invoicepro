@@ -1,5 +1,5 @@
+This is an Invoice Management System built using Django and all the data is stored inside a Postgres database. All the packages and libraries used are listed in the requirements.txt file. OS used: Ubuntu
 
-This is an Invoice Management System built using Django with data stored inside Postgres database. All the packages and libraries used are listed in the requirements.txt file.
 For this project, I have containerized the database in local using Docker for ease of use. You can do it just by following the instructions mentioned in this link: : https://www.commandprompt.com/education/how-to-create-a-postgresql-database-in-docker/
 
 To set it up in your local environment, you must have docker, python and any python supporting IDE installed as a prerequisite. 
@@ -17,7 +17,7 @@ To create new customers and view the existing ones, you can visit the link: http
 
 ![create customers](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/customer_creation.png)  
 
-To update an existing customer, get his detailed view or delete customer, visit the link: http://0.0.0.0:8000/customers/id where id is the customer id(integer) example 134.
+To update an existing customer, get his detailed view or delete customer, visit the link: http://0.0.0.0:8000/customers/id where id is the customer id(integer) example: 134.
 
 ![update, get_detailed_view](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/update_customer.png)
 
