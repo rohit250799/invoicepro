@@ -11,28 +11,10 @@ class EstimateItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstimateItems
         fields = ['product', 'offered_quantity_to_customer', 'selling_price_proposed_to_customer']
-        #fields = '__all__'
-        #depth = 1 #includes item details in serialization
 
 class EstimateSerializer(serializers.ModelSerializer):
-    #items = EstimateItemSerializer(many=True)
-    items = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all())
-
-#     ITEMS_CHOICES =(  
-#     ("1", "One"),  
-#     ("2", "Two"),  
-#     ("3", "Three"),  
-#     ("4", "Four"),  
-#     ("5", "Five"),  
-# ) 
-
-    #items = EstimateItemSerializer(many=True)
-    # items = serializers.MultipleChoiceField(choices = ITEMS_CHOICES,
-    #     style = {
-    #         'base_temolate': 'select_multiple.html', 'rows': 10
-    #     }
-    # )
-    #customer_id = serializers.IntegerField(write_only=True)
+    items = EstimateItemSerializer(many=True)
+    
     class Meta:
         model = Estimates
         fields = ['estimate_number', 'customer', 'estimate_date', 'offer_expiry_date', 'items']
@@ -41,8 +23,6 @@ class EstimateSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop('items')
         estimate = Estimates.objects.create(**validated_data)
         for item_data in items_data:
-            # product_data = item_data.pop('product')
-            # product, _ = Item.objects.get_or_create(**product_data)
             EstimateItems.objects.create(estimate=estimate, **item_data)
         return estimate
 

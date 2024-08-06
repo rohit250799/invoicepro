@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EstimateItems',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('quoteitems_id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('offered_quantity_to_customer', models.PositiveIntegerField()),
                 ('selling_price_proposed_to_customer', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='items.item')),
