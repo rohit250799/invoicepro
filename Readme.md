@@ -15,16 +15,16 @@ Customers:
 
 To create new customers and view the existing ones, you can visit the link: http://0.0.0.0:8000/customers/ where 0.0.0.0 is the localhost address and :8000 is the port number that you have set up
 
-![create customers](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/customer_creation.png)  
+![create customers](/images/customer_creation.png) 
 
 To update an existing customer, get his detailed view or delete customer, visit the link: http://0.0.0.0:8000/customers/id where id is the customer id(integer) example: 134.
 
-![update, get_detailed_view](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/update_customer.png)
+![update, get_detailed_view](/static/static_files/images/update_customer.png)
 
-![delete customer](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/delete_customer.png)
+![delete customer](/static/static_files/images/delete_customer.png)
 
 Offers/Estimates:
 
 To create new estimates and view the existing ones, you can visit the link: http://0.0.0.0:8000/estimates/index/ where 0.0.0.0 is the localhost address and :8000 is the port number that is have set up
 
-![create estimates](/media/coding/Python_projects/django_projects/coursera_projects/invoicePro/static/static_files/images/estimate_creation.png)
+![create estimates](/static/static_files/images/estimate_creation.png)
