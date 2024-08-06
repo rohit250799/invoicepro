@@ -15,7 +15,7 @@ Customers:
 
 To create new customers and view the existing ones, you can visit the link: http://0.0.0.0:8000/customers/ where 0.0.0.0 is the localhost address and :8000 is the port number that you have set up
 
-![create customers](/images/customer_creation.png) 
+![create customers](/static/static_files/images/customer_creation.png) 
 
 To update an existing customer, get his detailed view or delete customer, visit the link: http://0.0.0.0:8000/customers/id where id is the customer id(integer) example: 134.
 
