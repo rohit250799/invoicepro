@@ -24,13 +24,22 @@ class EstimateCreationView(APIView):
     
     def post(self, request):
         data = request.data
-        serializer = EstimateSerializer(data=data)
+        serializer = EstimateSerializer(data=request.data)
         #print(serializer.data)
         if serializer.is_valid():
             #input_data = serializer.validated_data
             serializer.save()
-            return Response({'serializer': serializer})
+            #return Response({'serializer': self.serializer.data}, template_name='estimate_form.html')
+            queryset = Estimates.objects.all()
+            return Response({
+                'estimate': queryset,
+                'message': 'Estimate succesfully created',
+            }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        queryset = Estimates.objects.all()
+        return Response({'estimates': queryset})
 
     
     
@@ -59,6 +68,9 @@ def estimate_pdf_creation_view(request):
     p.save()
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=True, filename='estimate.pdf')
+
+def estimates_index(request):
+    return render(request, 'estimates/estimates_list.html')
 
 
 
