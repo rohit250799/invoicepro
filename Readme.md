@@ -1,8 +1,9 @@
-This is an Invoice Management System built using Django web framework of Python and all the data is stored inside Postgres database. All the packages and libraries used are listed in the requirements.txt file.
 
-To set it up in your local environment, you must have docker, python and any python supporting IDE installed as a prerequisite. For this project, I am creating a PostgreSQL database in Docker and its done in Ubuntu. You can do it just by following the instructions mentioned in this link: https://www.commandprompt.com/education/how-to-create-a-postgresql-database-in-docker/
+This is an Invoice Management System built using Django with data stored inside Postgres database. All the packages and libraries used are listed in the requirements.txt file.
+For this project, I have containerized the database in local using Docker for ease of use. You can do it just by following the instructions mentioned in this link: : https://www.commandprompt.com/education/how-to-create-a-postgresql-database-in-docker/
 
-First, start by cloning the repo and opening it in your preferred IDE.
+To set it up in your local environment, you must have docker, python and any python supporting IDE installed as a prerequisite. 
+First, start by cloning the repo and opening the project in your preferred IDE.
 
 Next, create a virtual environment by running the command -> python3 -m venv env(for ubuntu users). Or, create your virtual environment using the link: https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
 
