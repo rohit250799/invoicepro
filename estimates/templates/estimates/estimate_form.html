@@ -8,16 +8,17 @@
 </head>
 <body>
     <h1>Estimate Form</h1>
-    {% comment %} <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form> {% endcomment %}
+    <ul>
+        {% for estimate in estimates %}
+        <li>{{ estimate.estimate_number }}</li>
+        {% endfor %}
+    </ul>
 
-    <form action="{% url 'create-estimate' id=estimate.id %}" method="POST">
+    {% comment %} <form action="{% url 'create-estimate' %}" method="POST">
         {% csrf_token %}
         {% render_form serializer %}
+        {{ serializer.as_p }}
         <input type="submit" value="Save">
-    </form>
+    </form> {% endcomment %}
 </body>
 </html>
