@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from rest_framework import status
 #from rest_framework.decorators import api_view, permission_classes
 #from rest_framework.authtoken.models import Token
@@ -6,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
-from django.contrib import messages
+from django.contrib import messages as status_message
 from django.contrib.auth import get_user_model, authenticate
 from users.serializers import UserSerializer
 from users.models import UserProfileInfo
@@ -84,7 +85,12 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        messages.success(request, 'Registration succesful')
+        status_message.success(request, 'Registration succesful')
+        subject = 'Welcome to invoicePro, the best open source Invoice Management System'
+        messages = f'Hi user, thank you for registering at our site.'
+        email_from = 'no-reply@example.com'
+        recipient_list = serializer.validated_data['email']
+        send_mail(subject, messages, email_from, [recipient_list])
         return Response(serializer.data)
 
 class LoginView(APIView):

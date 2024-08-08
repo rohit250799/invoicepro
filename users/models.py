@@ -23,6 +23,7 @@ class UserProfileInfo(AbstractUser):
         USD = "USD", _("Usd")
         EUR = "EUR", _("Eur")
     
+    #user_id = models.AutoField(primary_key=True)
     mobile = models.CharField(max_length=15)
     plan_type = models.CharField(max_length=30, choices=Plan_options, default=Plan_options.FREE)
     user_country = models.CharField(max_length=30, choices=Country_options, default=Country_options.INDIA)
