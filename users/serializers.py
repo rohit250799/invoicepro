@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password']) #for hashing password
         user.save()
-        #messages.success(validated_data, 'User created succesfully!')
+        messages.success(validated_data, 'User created succesfully!')
         return user
     
     def update(self, instance, validated_data):
