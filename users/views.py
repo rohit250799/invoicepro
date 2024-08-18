@@ -29,11 +29,11 @@ class RegisterView(APIView):
         serializer.save()
         status_message.success(request, 'Registration succesful')
         subject = 'Welcome to invoicePro, the best open source Invoice Management System'
-        messages = f'Hi user, thank you for registering at our site.'
+        messages = f"Hi {serializer.data['username']}, thank you for registering at our site."
         email_from = 'no-reply@example.com'
         recipient_list = serializer.validated_data['email']
         send_mail(subject, messages, email_from, [recipient_list])
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     def post(self, request):
