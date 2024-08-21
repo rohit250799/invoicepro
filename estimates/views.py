@@ -13,9 +13,11 @@ from estimates.forms import EstimateForm
 
 #from django.template.response import SimpleTemplateResponse
 import io
+from io import BytesIO
 from django.http import FileResponse
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from reportlab.pdfgen import canvas
+from xhtml2pdf import pisa
 
 # Create your views here.
 
@@ -86,14 +88,49 @@ class PdfGenerationView(View):
         p.save()
         return response
 
-def estimate_pdf_creation_view(request):
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer)
-    p.drawString(100, 100, 'Testing pdf creation')
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='estimate.pdf')
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err: return HttpResponse(result.getvalue(), content_type = 'application/pdf')
+    #if not pdf.err: return render(request, result.getvalue(), 'estimates/estimate_pdf_template.html', content_type = 'application/pdf')
+
+    return None
+
+# estimate_data = {
+#     "company": "Rohit Company",
+#     "city": "Kolkata",
+#     "state": "Bengal"
+# }
+
+class ViewPDF(View):
+    def get(self, request, estimate_id, *args, **kwargs):
+        estimate_concerned = Estimates.objects.get(pk=estimate_id)
+        estimate_data = {
+            estimate_concerned.estimate_id: {
+                'estimate_number': estimate_concerned.estimate_number,
+                'customer': estimate_concerned.customer,
+                'estimate_date': estimate_concerned.estimate_date,
+                'offer_expiry_date': estimate_concerned.offer_expiry_date,
+                'subject': estimate_concerned.subject,
+                'status': estimate_concerned.status,
+                'customer_notes': estimate_concerned.customer_notes,
+                'tax_from_source_type': estimate_concerned.tax_from_source_type,
+                'applicable_tax_percentage': estimate_concerned.applicable_tax_percentage,
+                'shipping_charges_applicable': estimate_concerned.shipping_charges_applicable,
+                'shipping_charges': estimate_concerned.spipping_charges,
+                'discount_applicable': estimate_concerned.discount_applicable,
+                'discount_percentage': estimate_concerned.discount_percentage,
+                'terms_and_conditions': estimate_concerned.terms_and_conditions,
+                'upload_additional_files': estimate_concerned.upload_additional_files,
+                'total_estimate_amount': estimate_concerned.total_estimate_amount            
+            }
+        }
+        
+        #pdf = render_to_pdf('estimates/estimate_pdf_template.html', estimate_data)
+        pdf = render_to_pdf('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
+        return HttpResponse(pdf, content_type='application/pdf')
 
 def estimates_index(request):
     return render(request, 'estimates/estimates_list.html')

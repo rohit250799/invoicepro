@@ -1,0 +1,39 @@
+{% load rest_framework %}
+
+<html>
+<head>
+    <title>Estimate PDF Template</title>
+</head>
+<body>
+    {% comment %} <h1>Estimate List Pdf</h1> {% endcomment %}
+    
+    <ul>
+        <li>testing </li>
+        {% for estimate_id, estimate_info in estimates.items %}
+            <li>
+                
+                <strong>Estimate number:</strong> {{ estimate_info.estimate_number }} <br>
+                <strong>Customer:</strong> {{ estimate_info.customer }} <br>
+                <strong>Estimate Date:</strong> {{ estimate_info.estimate_date }} <br>
+                <strong>Offer Expiry Date:</strong> {{ estimate_info.offer_expiry_date }} <br>
+                <strong>Subject:</strong> {{ estimate_info.subject }} <br>
+                <strong>Status:</strong> {{ estimate_info.status }} <br>
+                <strong>Customer Notes:</strong> {{ estimate_info.customer_notes }} <br>
+                <strong>Tax from source type:</strong> {{ estimate_info.tax_from_source_type }} <br>
+                <strong>Applicable tax percentage:</strong> {{ estimate_info.applicable_tax_percentage }} <br>
+                <strong>Shipping charges applicable:</strong> {{ estimate_info.shipping_charges_applicable }} <br>
+                <strong>Shipping charges:</strong> {{ estimate_info.shipping_charges }} <br>
+                <strong>Discount applicable:</strong> {{ estimate_info.discount_applicable }} <br>
+                <strong>Discount percentage:</strong> {{ estimate_info.discount_percentage }} <br>
+                <strong>Terms and conditions:</strong> {{ estimate_info.terms_and_conditions }} <br>
+                <strong>Upload additional files:</strong> {{ estimate_info.upload_additional_files }} <br>
+                <strong>Total estimate amount:</strong> {{ estimate_info.total_estimate_amount }} <br>
+
+
+            </li>
+            {% comment %} <li>testing </li> {% endcomment %}
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
