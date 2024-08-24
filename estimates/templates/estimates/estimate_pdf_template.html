@@ -10,6 +10,7 @@
     <ul>
         <li>testing </li>
         {% for estimate_id, estimate_info in estimates.items %}
+            {% csrf_token %} 
             <li>
                 
                 <strong>Estimate number:</strong> {{ estimate_info.estimate_number }} <br>
