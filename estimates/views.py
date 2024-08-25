@@ -143,8 +143,8 @@ def render_pdf_for_sending(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     #pdf = pisa.pisaDocument(result)
-    pdf = pisa.pisaDocument(result)
     
 
 
@@ -177,19 +177,22 @@ def send_estimate_to_customer(self, estimate_id):
                 'total_estimate_amount': estimate_used.total_estimate_amount            
             }
         }
-    pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': 'estimate_data'})
+    #pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': 'estimate_data'})
+    pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
 
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="my_estimate.pdf"'
-        #return response
+          #response = pdf.getvalue()
+    #     #return response
     from_email = 'from@yourdjangoapp.com'
     to = 'to@yourbestuser.com'
 
-    message = EmailMessage(subject=subject, body=pdf, from_email=from_email, to=(to, ))
+    message = EmailMessage(subject=subject, body='Testing email sending with attachment', from_email=from_email, to=(to, ))
     message.attach('my_estimate.pdf', pdf, 'application/pdf')
     message.send()
-    return HttpResponse(status=status.HTTP_200_OK)
+    #return HttpResponse(status=status.HTTP_200_OK)
+    return HttpResponse(pdf, content_type='application/pdf', status=status.HTTP_200_OK)
 
 def estimates_index(request):
     return render(request, 'estimates/estimates_list.html')
