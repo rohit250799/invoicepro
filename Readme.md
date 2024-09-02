@@ -28,3 +28,13 @@ Offers/Estimates:
 To create new estimates and view the existing ones, you can visit the link: http://0.0.0.0:8000/estimates/index/ where 0.0.0.0 is the localhost address and :8000 is the port number that is have set up
 
 ![create estimates](/static/static_files/images/estimate_creation.png)
+
+To generate an estimate in pdf format, you have to send a GET request to the url: http://0.0.0.0:8000/estimates/pdf_view/14 where 0.0.0.0 is the localhost address and :8000 is the port number that is have set up
+
+![generate estimate in pdf](/static/static_files/images/generate_pdf.png)
+
+For email testing, I have used Mailtrap tool
+To send estimate to a customer, send a POST request to the url: http://0.0.0.0:8000/estimates/send_estimate/13/ where 13 is the estimate_id (primary key) 
+
+![send estimate to customer](/static/static_files/images/send_estimate_mail.png)
+
