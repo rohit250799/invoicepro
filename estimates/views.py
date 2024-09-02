@@ -74,9 +74,6 @@ class PdfGenerationView(View):
         response['Content-Disposition'] = 'attachment; filename="estimate.pdf"'
         html_string = render_to_string('estimates/estimate_pdf_template.html', {
             'estimate_number': estimate.estimate_number,  
-            # 'customer': 11,
-            # 'estimate_date': '2024-08-12',
-            # 'offer_expiry_date': '2024-08-19',
             'title': 'Test title',
             'content': 'Test content'
         })
@@ -92,13 +89,9 @@ def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
-    #pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     pdf = pisa.pisaDocument(html, result)
-    #pdf = pisa.CreatePDF(html, dest=result)
-
-
+    
     if not pdf.err: return HttpResponse(result.getvalue(), content_type = 'application/pdf')
-        #return result.getvalue()
     return None
 
     
@@ -126,35 +119,25 @@ class ViewPDF(View):
             }
         }
         
-        #pdf = render_to_pdf('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
-        #pdf = render_to_pdf('estimates/estimate_pdf_template.html', {'estimates': 'estimate_data'})
         pdf = render_to_pdf('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
-
-        # pdf = render_to_pdf(estimate_id)
-        # if pdf:
         return HttpResponse(pdf, content_type='application/pdf')
-        #     #response = HttpResponse(pdf, content_type='application/pdf')
-        #     response = HttpResponse(content_type='application/pdf')
-        #     response['Content-Disposition'] = 'attachment; filename="my_estimate.pdf"'
-        #     return response
-        # return HttpResponse("Error generating PDF", status=400)
-
+        
 def render_pdf_for_sending(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
     pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
-    #pdf = pisa.pisaDocument(result)
+    
     
 
 
 
-    if not pdf.err: #return HttpResponse(result.getvalue(), content_type = 'application/pdf')
-        return result.getvalue()
+    if not pdf.err: return result.getvalue()
     return None
 
 @csrf_exempt    
-def send_estimate_to_customer(self, estimate_id):
+def send_estimate_to_customer(request, estimate_id):
+
     subject = f"New estimate {'estimate_number'} sent by Tester"
     estimate_used = Estimates.objects.get(pk=estimate_id)
     estimate_data = {
@@ -177,29 +160,68 @@ def send_estimate_to_customer(self, estimate_id):
                 'total_estimate_amount': estimate_used.total_estimate_amount            
             }
         }
-    #pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': 'estimate_data'})
+    
     pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
+
 
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="my_estimate.pdf"'
-          #response = pdf.getvalue()
-    #     #return response
+
+        email_context = {
+            'check_online_url': request.build_absolute_uri(f'/estimates/{estimate_id}/check/')
+        }
+        email_html_content = render_to_string('estimates/mail_template.html', email_context)
+        
     from_email = 'from@yourdjangoapp.com'
     to = 'to@yourbestuser.com'
 
-    message = EmailMessage(subject=subject, body='Testing email sending with attachment', from_email=from_email, to=(to, ))
+    message = EmailMessage(subject=subject, body=email_html_content, from_email=from_email, to=(to, ))
+    
+    message.content_subtype = 'html'
+
     message.attach('my_estimate.pdf', pdf, 'application/pdf')
     message.send()
-    #return HttpResponse(status=status.HTTP_200_OK)
+
+
     return HttpResponse(pdf, content_type='application/pdf', status=status.HTTP_200_OK)
 
 def estimates_index(request):
     return render(request, 'estimates/estimates_list.html')
 
 
+def check_estimate(request, estimate_id):
+    estimate_received = Estimates.objects.get(pk=estimate_id)
+    received_estimate_data = {
+        estimate_received.estimate_id: {
+                'estimate_number': estimate_received.estimate_number,
+                'customer': estimate_received.customer,
+                'estimate_date': estimate_received.estimate_date,
+                'offer_expiry_date': estimate_received.offer_expiry_date,
+                'subject': estimate_received.subject,
+                'status': estimate_received.status,
+                'customer_notes': estimate_received.customer_notes,
+                'tax_from_source_type': estimate_received.tax_from_source_type,
+                'applicable_tax_percentage': estimate_received.applicable_tax_percentage,
+                'shipping_charges_applicable': estimate_received.shipping_charges_applicable,
+                'shipping_charges': estimate_received.spipping_charges,
+                'discount_applicable': estimate_received.discount_applicable,
+                'discount_percentage': estimate_received.discount_percentage,
+                'terms_and_conditions': estimate_received.terms_and_conditions,
+                'upload_additional_files': estimate_received.upload_additional_files,
+                'total_estimate_amount': estimate_received.total_estimate_amount            
+            }
 
+    }
+    return render(request, 'estimates/estimate_page.html', received_estimate_data)
 
+def accept_estimate(request, estimate_id):
+    # Logic to accept the offer
+    return HttpResponse("Offer accepted.")
+
+def reject_estimate(request, estimate_id):
+    # Logic to reject the offer
+    return HttpResponse("Offer rejected.")
 
 
 

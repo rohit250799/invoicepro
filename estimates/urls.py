@@ -1,5 +1,5 @@
 from django.urls import path
-from estimates.views import EstimateListCreateView, EstimateRetrieveUpdateDeleteView, EstimateCreationView, EstimateDetailView, estimates_index, PdfGenerationView, ViewPDF, send_estimate_to_customer
+from estimates.views import EstimateListCreateView, EstimateRetrieveUpdateDeleteView, EstimateCreationView, EstimateDetailView, estimates_index, PdfGenerationView, ViewPDF, send_estimate_to_customer, check_estimate, accept_estimate, reject_estimate
 
 
 urlpatterns = [
@@ -12,4 +12,7 @@ urlpatterns = [
     path('pdf_view/<int:estimate_id>/', ViewPDF.as_view(), name='pdf-view'),
     path('send_estimate/<int:estimate_id>/', send_estimate_to_customer, name='send-estimate'),
     #path('index/', estimates_index, name='estimates-index'),
+    path('<int:estimate_id>/check/', check_estimate, name='check_offer'),
+    path('<int:estimate_id>/accept/', accept_estimate, name='accept_offer'),
+    path('<int:estimate_id>/reject/', reject_estimate, name='reject_offer'),
 ]
