@@ -30,7 +30,7 @@ class Estimates(models.Model):
     tax_from_source_type = models.CharField(choices=TaxTypeAsTdsOrTcs, default=TaxTypeAsTdsOrTcs.TCS)
     applicable_tax_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True, blank=True)
     shipping_charges_applicable = models.BooleanField(default=False)
-    spipping_charges = models.DecimalField(max_digits=10, decimal_places=2, default=None, null=True, blank=True)
+    shipping_charges = models.DecimalField(max_digits=10, decimal_places=2, default=None, null=True, blank=True)
     discount_applicable = models.BooleanField(default=False)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=None, null=True, blank=True)
     terms_and_conditions = models.CharField()

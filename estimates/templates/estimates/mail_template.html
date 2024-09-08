@@ -9,6 +9,11 @@
 
     <h1>Offer Notification</h1>
     <p>Please find the attached offer document.</p>
-    <a href="{{ check_online_url }}" style="padding: 10px 15px; background-color: blue; color: white; text-decoration: none; border-radius: 5px;">Check Online</a>
+    <p>Estimate id: {{ estimate_id }}</p>
+    {% if estimate_id %}
+        <a href="{{ check_online }}" style="padding: 10px 15px; background-color: blue; color: white; text-decoration: none; border-radius: 5px;">Check Online</a>
+    {% else %}
+        <p>No online check available for this estimate.</p>
+    {% endif %}
 </body>
 </html>

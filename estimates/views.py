@@ -1,7 +1,9 @@
+import ast #testing
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.utils.html import strip_tags
 from django.http import HttpResponse, Http404
+from django.urls import reverse
 from django.core.mail import EmailMessage
 from rest_framework import generics, viewsets, status, serializers
 from rest_framework.views import APIView
@@ -110,7 +112,7 @@ class ViewPDF(View):
                 'tax_from_source_type': estimate_concerned.tax_from_source_type,
                 'applicable_tax_percentage': estimate_concerned.applicable_tax_percentage,
                 'shipping_charges_applicable': estimate_concerned.shipping_charges_applicable,
-                'shipping_charges': estimate_concerned.spipping_charges,
+                'shipping_charges': estimate_concerned.shipping_charges,
                 'discount_applicable': estimate_concerned.discount_applicable,
                 'discount_percentage': estimate_concerned.discount_percentage,
                 'terms_and_conditions': estimate_concerned.terms_and_conditions,
@@ -137,41 +139,45 @@ def render_pdf_for_sending(template_src, context_dict):
 
 @csrf_exempt    
 def send_estimate_to_customer(request, estimate_id):
-
-    subject = f"New estimate {'estimate_number'} sent by Tester"
     estimate_used = Estimates.objects.get(pk=estimate_id)
+    subject = f"New estimate {estimate_used.estimate_number} sent by Tester"
     estimate_data = {
-            estimate_used.estimate_id: {
-                'estimate_number': estimate_used.estimate_number,
-                'customer': estimate_used.customer,
-                'estimate_date': estimate_used.estimate_date,
-                'offer_expiry_date': estimate_used.offer_expiry_date,
-                'subject': estimate_used.subject,
-                'status': estimate_used.status,
-                'customer_notes': estimate_used.customer_notes,
-                'tax_from_source_type': estimate_used.tax_from_source_type,
-                'applicable_tax_percentage': estimate_used.applicable_tax_percentage,
-                'shipping_charges_applicable': estimate_used.shipping_charges_applicable,
-                'shipping_charges': estimate_used.spipping_charges,
-                'discount_applicable': estimate_used.discount_applicable,
-                'discount_percentage': estimate_used.discount_percentage,
-                'terms_and_conditions': estimate_used.terms_and_conditions,
-                'upload_additional_files': estimate_used.upload_additional_files,
-                'total_estimate_amount': estimate_used.total_estimate_amount            
-            }
+        estimate_used.estimate_id: {
+            'estimate_number': estimate_used.estimate_number,
+            'customer': estimate_used.customer,
+            'estimate_date': estimate_used.estimate_date,
+            'offer_expiry_date': estimate_used.offer_expiry_date,
+            'subject': estimate_used.subject,
+            'status': estimate_used.status,
+            'customer_notes': estimate_used.customer_notes,
+            'tax_from_source_type': estimate_used.tax_from_source_type,
+            'applicable_tax_percentage': estimate_used.applicable_tax_percentage,
+            'shipping_charges_applicable': estimate_used.shipping_charges_applicable,
+            'shipping_charges': estimate_used.shipping_charges,
+            'discount_applicable': estimate_used.discount_applicable,
+            'discount_percentage': estimate_used.discount_percentage,
+            'terms_and_conditions': estimate_used.terms_and_conditions,
+            'upload_additional_files': estimate_used.upload_additional_files,
+            'total_estimate_amount': estimate_used.total_estimate_amount            
         }
+    }
     
     pdf = render_pdf_for_sending('estimates/estimate_pdf_template.html', {'estimates': estimate_data})
-
 
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="my_estimate.pdf"'
+        relative_url = reverse('check_online', kwargs={'estimate_id': estimate_id})
+        absolute_url = request.build_absolute_uri(relative_url)
 
         email_context = {
-            'check_online_url': request.build_absolute_uri(f'/estimates/{estimate_id}/check/')
+            'check_online': absolute_url,
+            'estimate_id': estimate_used.estimate_id,
+            'estimate_data_for_email_context': estimate_data
+
         }
         email_html_content = render_to_string('estimates/mail_template.html', email_context)
+
         
     from_email = 'from@yourdjangoapp.com'
     to = 'to@yourbestuser.com'
@@ -183,8 +189,7 @@ def send_estimate_to_customer(request, estimate_id):
     message.attach('my_estimate.pdf', pdf, 'application/pdf')
     message.send()
 
-
-    return HttpResponse(pdf, content_type='application/pdf', status=status.HTTP_200_OK)
+    return HttpResponse("Email sent succesfully", status=status.HTTP_200_OK)
 
 def estimates_index(request):
     return render(request, 'estimates/estimates_list.html')
@@ -204,15 +209,14 @@ def check_estimate(request, estimate_id):
                 'tax_from_source_type': estimate_received.tax_from_source_type,
                 'applicable_tax_percentage': estimate_received.applicable_tax_percentage,
                 'shipping_charges_applicable': estimate_received.shipping_charges_applicable,
-                'shipping_charges': estimate_received.spipping_charges,
+                'shipping_charges': estimate_received.shipping_charges,
                 'discount_applicable': estimate_received.discount_applicable,
                 'discount_percentage': estimate_received.discount_percentage,
                 'terms_and_conditions': estimate_received.terms_and_conditions,
                 'upload_additional_files': estimate_received.upload_additional_files,
                 'total_estimate_amount': estimate_received.total_estimate_amount            
-            }
-
-    }
+            }      
+        }
     return render(request, 'estimates/estimate_page.html', received_estimate_data)
 
 def accept_estimate(request, estimate_id):
