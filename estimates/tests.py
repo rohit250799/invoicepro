@@ -1,3 +1,6 @@
+import mailtrap as mt
+
+
 from unittest import TestCase
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -14,12 +17,27 @@ class EmailTestCase(TestCase):
         settings.EMAIL_PORT = '2525'
     
     def test_sending_mail(self):
-        subject = 'Test subject email'
-        html_message = render_to_string('estimates/mail_template.html', {'context': 'values'})
-        plain_message = strip_tags(html_message)
-        from_email = 'from@yourdjangoapp.com'
-        to = 'to@yourbestuser.com'
+        # subject = 'Test subject email'
+        # html_message = render_to_string('estimates/mail_template.html', {'context': 'values'})
+        # plain_message = strip_tags(html_message)
+        # from_email = 'from@yourdjangoapp.com'
+        # to = 'to@yourbestuser.com'
 
-        message = EmailMessage(subject=subject, body=plain_message, from_email=from_email, to=(to, ))
-        message.send()
+        # message = EmailMessage(subject=subject, body=plain_message, from_email=from_email, to=(to, ))
+        # message.send()
 
+
+
+
+        mail = mt.MailFromTemplate(
+            sender=mt.Address(email="mailtrap@demomailtrap.com", name="Mailtrap Test"),
+            to=[mt.Address(email="zopjxjhambbgwlswau@nbmbb.com")],
+            template_uuid="2251b412-0d18-46e3-abc3-10a1cbd034e8",
+            template_variables={
+            "user_email": "Test_User_email",
+            "pass_reset_link": "Test_Pass_reset_link"
+            }
+        )
+
+        client = mt.MailtrapClient(token="92deac8f0d744616c9802c6743744d90")
+        client.send(mail)
