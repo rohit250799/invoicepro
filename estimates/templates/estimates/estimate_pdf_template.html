@@ -3,6 +3,11 @@
 <html>
 <head>
     <title>Estimate PDF Template</title>
+    <style>
+        .item-list { margin-top: 20px; }
+        .item-list table { width: 100%; border-collapse: collapse; }
+        .item-list th, .item-list td { border: 1px solid black; padding: 8px; text-align: left; }
+    </style>
 </head>
 <body>
     
@@ -32,6 +37,28 @@
 
             </li>
         {% endfor %}
+        <div class="item-list">
+        <h2>For testing items printing</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.product }}</td>
+                            <td>{{ item.offered_quantity_to_customer }}</td>
+                            <td>${{ item.selling_price_proposed_to_customer }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </ul>
 
 </body>
