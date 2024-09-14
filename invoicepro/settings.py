@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'estimates',
     'items',
     'users',
+    'invoices',
 ]
 
 MIDDLEWARE = [
