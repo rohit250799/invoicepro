@@ -69,7 +69,7 @@ class Estimates(models.Model):
 class EstimateItems(models.Model):
     id = models.AutoField(primary_key=True)
     estimate = models.ForeignKey(Estimates, on_delete=models.CASCADE) #testing
-    name = models.ForeignKey(Item, on_delete=models.CASCADE)
+    name = models.ForeignKey(Item, related_name='estimate_items', on_delete=models.CASCADE) #foreign key for item
     offered_quantity_to_customer = models.PositiveIntegerField()
     selling_price_proposed_to_customer = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
