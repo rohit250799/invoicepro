@@ -24,7 +24,7 @@ class Estimates(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     estimate_date = models.DateField(default=datetime.date.today())
     offer_expiry_date = models.DateField()
-    items = models.ManyToManyField(Item, through='EstimateItems') #testing
+    items = models.ManyToManyField(Item, through="EstimateItems", through_fields=("estimate", "name")) #testing
     subject = models.TextField()
     status = models.CharField(choices=StatusType, default=StatusType.DRAFT)
     customer_notes = models.TextField(blank=True)
