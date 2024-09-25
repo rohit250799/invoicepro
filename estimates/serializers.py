@@ -9,12 +9,11 @@ class EstimateItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EstimateItems
-        fields = ['name', 'offered_quantity_to_customer']
+        fields = ['name']
 
 
 class EstimateSerializer(serializers.ModelSerializer):
     items = EstimateItemSerializer(many=True)
-
     
     class Meta:
         model = Estimates
@@ -30,6 +29,7 @@ class EstimateSerializer(serializers.ModelSerializer):
             offered_quantity_to_customer = item_data.get('offered_quantity_to_customer', 1)
 
             EstimateItems.objects.create(estimate=estimate, name=item, offered_quantity_to_customer=offered_quantity_to_customer)
+
 
         return estimate
 
