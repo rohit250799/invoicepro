@@ -1,9 +1,5 @@
 from estimates.models import Estimates, EstimateItems
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from items.serializers import ItemSerializer
-from items.models import Item
-from customers.models import Customer
 
 class EstimateItemSerializer(serializers.ModelSerializer):
     #product = ItemSerializer()
