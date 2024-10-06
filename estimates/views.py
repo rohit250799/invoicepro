@@ -25,6 +25,7 @@ from xhtml2pdf import pisa
 
 class EstimateListCreateView(generics.ListCreateAPIView):
     queryset = Estimates.objects.all()
+    #items = queryset.items.all() #testing
     serializer_class = EstimateSerializer
 
 class EstimateCreationView(APIView):
@@ -73,11 +74,13 @@ class PdfGenerationView(View):
     def get(self, request, estimate_id, *args, **kwargs):
         response = HttpResponse(content_type='application/pdf')
         estimate = Estimates.objects.get(pk=estimate_id)
+        estimate_items = estimate.items.all()
         response['Content-Disposition'] = 'attachment; filename="estimate.pdf"'
         html_string = render_to_string('estimates/estimate_pdf_template.html', {
             'estimate_number': estimate.estimate_number,  
             'title': 'Test title',
-            'content': 'Test content'
+            'content': 'Test content',
+            'estimate_items': estimate_items
         })
         text_content = strip_tags(html_string)
 
@@ -100,6 +103,7 @@ def render_to_pdf(template_src, context_dict={}):
 class ViewPDF(View):
     def get(self, request, estimate_id, *args, **kwargs):
         estimate_concerned = Estimates.objects.get(pk=estimate_id)
+        estimate_concerned_items = estimate_concerned.items.all()
         estimate_data = {
             estimate_concerned.estimate_id: {
                 'estimate_number': estimate_concerned.estimate_number,
@@ -108,6 +112,7 @@ class ViewPDF(View):
                 'offer_expiry_date': estimate_concerned.offer_expiry_date,
                 'subject': estimate_concerned.subject,
                 'status': estimate_concerned.status,
+                'items': estimate_concerned_items, #for testing
                 'customer_notes': estimate_concerned.customer_notes,
                 'tax_from_source_type': estimate_concerned.tax_from_source_type,
                 'applicable_tax_percentage': estimate_concerned.applicable_tax_percentage,
