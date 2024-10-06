@@ -24,6 +24,7 @@ class Estimates(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     estimate_date = models.DateField(default=datetime.date.today())
     offer_expiry_date = models.DateField()
+    items = models.ManyToManyField(Item, through="EstimateItems", through_fields=("estimate", "name")) #testing
     subject = models.TextField()
     status = models.CharField(choices=StatusType, default=StatusType.DRAFT)
     customer_notes = models.TextField(blank=True)
@@ -64,14 +65,29 @@ class Estimates(models.Model):
 
     def __str__(self):
         return self.estimate_number
-
+    
 class EstimateItems(models.Model):
-    quoteitems_id = models.AutoField(primary_key=True)
-    estimate = models.ForeignKey(Estimates, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Item, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+    estimate = models.ForeignKey(Estimates, on_delete=models.CASCADE) #testing
+    name = models.ForeignKey(Item, related_name='estimate_items', on_delete=models.CASCADE) #foreign key for item
     offered_quantity_to_customer = models.PositiveIntegerField()
     selling_price_proposed_to_customer = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    def __str__(self):
+    def __int__(self):
         #return f'{self.estimate.estimate_number} - {self.product}'
-        return self.product
+        return self.id
+        #return f'{self.product, self.selling_price_proposed_to_customer}'
+
+
+# class EstimateItems(models.Model):
+#     quoteitems_id = models.AutoField(primary_key=True)
+#     estimate = models.ForeignKey(Estimates, related_name='items', on_delete=models.CASCADE)
+#     product = models.ForeignKey(Item, on_delete=models.CASCADE)
+#     offered_quantity_to_customer = models.PositiveIntegerField()
+#     selling_price_proposed_to_customer = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+#     def __str__(self):
+#         #return f'{self.estimate.estimate_number} - {self.product}'
+#         #return self.product
+#         return f'{self.product, self.selling_price_proposed_to_customer}'
+

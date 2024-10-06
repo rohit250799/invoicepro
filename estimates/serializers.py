@@ -1,16 +1,12 @@
 from estimates.models import Estimates, EstimateItems
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from items.serializers import ItemSerializer
-from items.models import Item
-from customers.models import Customer
 
 class EstimateItemSerializer(serializers.ModelSerializer):
-    #product = ItemSerializer()
 
     class Meta:
         model = EstimateItems
-        fields = ['product', 'offered_quantity_to_customer', 'selling_price_proposed_to_customer']
+        fields = ['name']
+
 
 class EstimateSerializer(serializers.ModelSerializer):
     items = EstimateItemSerializer(many=True)
@@ -20,10 +16,17 @@ class EstimateSerializer(serializers.ModelSerializer):
         fields = ['estimate_number', 'customer', 'estimate_date', 'offer_expiry_date', 'items']
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
+        items_data = validated_data.pop('items', [])
         estimate = Estimates.objects.create(**validated_data)
         for item_data in items_data:
-            EstimateItems.objects.create(estimate=estimate, **item_data)
+            item_id = item_data['name'].pk
+            item = Item.objects.get(id=item_id)
+
+            offered_quantity_to_customer = item_data.get('offered_quantity_to_customer', 1)
+
+            EstimateItems.objects.create(estimate=estimate, name=item, offered_quantity_to_customer=offered_quantity_to_customer)
+
+
         return estimate
 
     # def update(self, instance, validated_data):
